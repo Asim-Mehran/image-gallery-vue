@@ -1,9 +1,9 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/">Image Gallery</router-link> 
+      <router-link to="/">Image Gallery</router-link>
     </nav>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 

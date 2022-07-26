@@ -1,17 +1,17 @@
 <template>
   <div class="home">
-    <ImageGallery msg="Welcome to Your"/>
+    <ImageGallery msg="Welcome to Your" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ImageGallery from '@/components/ImageGallery.vue'
+import ImageGallery from "@/components/ImageGallery.vue";
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
-    ImageGallery
-  }
-}
+    ImageGallery,
+  },
+};
 </script>
