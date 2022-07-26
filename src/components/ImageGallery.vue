@@ -2,7 +2,7 @@
 <div class="imagegallery">
 <div class="row d-flex align-items-center justify-content-center">
    <div class="col-xl-3 col-lg-4 col-sm-6 col-md-6 ml-2">
-    <input v-model="searchKeyword" @keyup="onTypeSearch()" type="search" placeholder="Type to search" class="form-control" />
+    <input v-model="searchKeyword" @keyup="onTypeSearch()" type="text" placeholder="Type to search" class="search form-control" />
   </div>
 </div>
   <div class="row">
@@ -60,6 +60,9 @@ return {
   display: block;
   width: auto;
   height: auto;
+}
+.search::-ms-clear {
+    display: none;
 }
 
 .overlay {
