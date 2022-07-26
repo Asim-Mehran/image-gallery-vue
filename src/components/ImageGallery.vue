@@ -5,7 +5,17 @@
     <input v-model="searchKeyword" @keyup="onTypeSearch()" type="text" placeholder="Type to search" class="search form-control" />
   </div>
 </div>
-  <div class="row">
+
+<div class="row mt-5"  v-if="isLoading">
+<div class="text-center">
+  <b-spinner variant="primary" label=""></b-spinner>
+</div>
+<div class="text-center">
+Loading...
+</div>
+  </div>
+
+  <div v-if="!isLoading" class="row">
     <div v-bind:key="image.id" v-for="image in filterList" class="col-xl-3 col-lg-4 col-sm-6 col-md-6 mt-5">
     <div class="container" @click="onClickImage(image)">
       <img  v-bind:src="getRandomSizeUrl(image.url)" /> 
@@ -25,7 +35,8 @@ export default {
 return {
   imageList:[],
   filterList:[],
-  searchKeyword:''
+  searchKeyword:'',
+  isLoading:false
 }
   },
   methods:{
@@ -42,10 +53,12 @@ return {
    }
   },
   created:function(){
+    this.isLoading=true;
     fetch("https://jsonplaceholder.typicode.com/photos")
     .then((response) => response.json()).then((response) => {
      this.imageList= response.slice(0,16);
      this.filterList= response.slice(0,16);
+    this.isLoading=false;
 })}
 }
 </script>
