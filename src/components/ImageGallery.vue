@@ -42,6 +42,7 @@ export default {
   data() {
     return {
       imageList: [],
+      sizes: [],
       filterList: [],
       searchKeyword: "",
       isLoading: false,
@@ -56,14 +57,23 @@ export default {
         x.title.toLowerCase().includes(this.searchKeyword.trim().toLowerCase())
       );
     },
+    getRandomNumber: function (limit, offset) {
+      return Math.floor(Math.random() * limit) + offset;
+    },
     getRandomSizeUrl: function (url) {
       let splitUrl = url.split("600");
-      let number = Math.floor(Math.random() * 50) + 250;
-      return `${splitUrl[0]}/${number}/${splitUrl[1]}`;
+      let number = this.getRandomNumber(4, 0);
+      return `${splitUrl[0]}/${this.sizes[number]}/${splitUrl[1]}`;
     },
   },
   created: function () {
     this.isLoading = true;
+    this.sizes = [
+      this.getRandomNumber(50, 260),
+      this.getRandomNumber(50, 260),
+      this.getRandomNumber(50, 260),
+      this.getRandomNumber(50, 260),
+    ];
     fetch("https://jsonplaceholder.typicode.com/photos")
       .then((response) => response.json())
       .then((response) => {
