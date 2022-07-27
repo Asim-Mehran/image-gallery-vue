@@ -46,6 +46,10 @@ export default {
       filterList: [],
       searchKeyword: "",
       isLoading: false,
+      displayRandomImageSizeCount: 4,
+      imageRandomSizeLimit: 50,
+      imageRandomSizeOffset: 250,
+      apiImageLimit: 16,
     };
   },
   methods: {
@@ -58,27 +62,32 @@ export default {
       );
     },
     getRandomNumber: function (limit, offset) {
-      return Math.floor(Math.random() * limit) + offset;
+      return Math.floor(Math.random() * limit) + (offset > 0 ? offset : 0);
     },
     getRandomSizeUrl: function (url) {
       let splitUrl = url.split("600");
-      let number = this.getRandomNumber(4, 0);
+      let number = this.getRandomNumber(this.displayRandomImageSizeCount);
       return `${splitUrl[0]}/${this.sizes[number]}/${splitUrl[1]}`;
+    },
+    setRandomSizesArray: function () {
+      for (let index = 0; index < this.displayRandomImageSizeCount; index++) {
+        this.sizes.push(
+          this.getRandomNumber(
+            this.imageRandomSizeLimit,
+            this.imageRandomSizeOffset
+          )
+        );
+      }
     },
   },
   created: function () {
     this.isLoading = true;
-    this.sizes = [
-      this.getRandomNumber(50, 260),
-      this.getRandomNumber(50, 260),
-      this.getRandomNumber(50, 260),
-      this.getRandomNumber(50, 260),
-    ];
+    this.setRandomSizesArray();
     fetch("https://jsonplaceholder.typicode.com/photos")
       .then((response) => response.json())
       .then((response) => {
-        this.imageList = response.slice(0, 16);
-        this.filterList = response.slice(0, 16);
+        this.imageList = response.slice(0, this.apiImageLimit);
+        this.filterList = response.slice(0, this.apiImageLimit);
         this.isLoading = false;
       });
   },
