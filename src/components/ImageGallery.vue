@@ -1,6 +1,6 @@
 <template>
-  <div class="imagegallery">
-    <div class="row d-flex align-items-center justify-content-center">
+  <div id="imagegallery">
+    <div class="row mb-2 d-flex align-items-center justify-content-center">
       <div class="col-xl-3 col-lg-4 col-sm-6 col-md-6 ml-2">
         <input
           v-model="searchKeyword"
@@ -11,24 +11,28 @@
         />
       </div>
     </div>
+    <div class="row mb-2 d-flex align-items-center justify-content-center">
+      <div class="card w-75" style="width: 60rem">
+        <div class="card-body">
+          <div class="row mt-5" v-if="isLoading">
+            <div class="text-center">
+              <b-spinner variant="primary" label=""></b-spinner>
+            </div>
+            <div class="text-center">Loading...</div>
+          </div>
 
-    <div class="row mt-5" v-if="isLoading">
-      <div class="text-center">
-        <b-spinner variant="primary" label=""></b-spinner>
-      </div>
-      <div class="text-center">Loading...</div>
-    </div>
-
-    <div v-if="!isLoading" class="row">
-      <div
-        v-bind:key="image.id"
-        v-for="image in filterList"
-        class="col-xl-3 col-lg-4 col-sm-6 col-md-6 mt-5"
-      >
-        <div class="container" @click="onClickImage(image)">
-          <img v-bind:src="getRandomSizeUrl(image.url)" />
-          <div class="overlay">
-            <div class="text">{{ image.title }}</div>
+          <div v-if="!isLoading" class="row" style="position: relative">
+            <img
+              v-bind:key="image.id"
+              v-for="image in filterList"
+              class="img-thumbnail w-auto h-100 img-fluid"
+              alt="Responsive image"
+              v-bind:src="getRandomSizeUrl(image.url)"
+              style="position: relative"
+              v-b-tooltip.hover
+              @click="onClickImage(image)"
+              :title="image.title"
+            />
           </div>
         </div>
       </div>
@@ -48,7 +52,7 @@ export default {
       isLoading: false,
       displayRandomImageSizeCount: 4,
       imageRandomSizeLimit: 50,
-      imageRandomSizeOffset: 250,
+      imageRandomSizeOffset: 100,
       apiImageLimit: 16,
     };
   },
@@ -61,7 +65,7 @@ export default {
         x.title.toLowerCase().includes(this.searchKeyword.trim().toLowerCase())
       );
     },
-    getRandomNumber: function (limit, offset) {
+    getRandomNumber: (limit, offset) => {
       return Math.floor(Math.random() * limit) + (offset > 0 ? offset : 0);
     },
     getRandomSizeUrl: function (url) {
@@ -83,13 +87,20 @@ export default {
   created: function () {
     this.isLoading = true;
     this.setRandomSizesArray();
-    fetch("https://jsonplaceholder.typicode.com/photos")
-      .then((response) => response.json())
-      .then((response) => {
-        this.imageList = response.slice(0, this.apiImageLimit);
-        this.filterList = response.slice(0, this.apiImageLimit);
-        this.isLoading = false;
-      });
+    (async () => {
+      try {
+        const response = await this.axios.get(
+          "https://jsonplaceholder.typicode.com/photos"
+        );
+        if (response) {
+          this.imageList = response.data.slice(0, this.apiImageLimit);
+          this.filterList = response.data.slice(0, this.apiImageLimit);
+        }
+      } catch (error) {
+        alert(error);
+      }
+      this.isLoading = false;
+    })();
   },
 };
 </script>
